@@ -14,12 +14,18 @@ class Board extends Component {
       }
       
       handleClick(i){
+        // preventing from doing anything if the block is not empty
+        // and there's already a winner
         if (this.state.squares[i] !== null || calculateWinner(this.state.squares)) return
+        // creating a copy of the current state, mutating the current state and rerendering the UI
         const squares = this.state.squares.slice()
         this.state.xIsNext? squares[i] = 'X': squares[i] = 'O'
         this.setState(
-            { squares: squares,
-            xIsNext: !this.state.xIsNext })
+          { squares: squares,
+            xIsNext: !this.state.xIsNext }
+          )
+        // creating a copy of the current state and adding it to the history of the Game component 
+        this.props.adder(this.state.squares.slice())
       }
       renderSquare(i) {
         return <Square value={this.state.squares[i]} onClick={ () => this.handleClick(i) } />;
