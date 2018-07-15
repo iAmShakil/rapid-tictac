@@ -1,34 +1,33 @@
 import React, { Component } from 'react'
 import Board from './Board'
+import socketIOClient from 'socket.io-client'
+var socket = socketIOClient('localhost:3001')
 
 class Game extends Component {
 
     constructor(props){
       super(props)
-      this.gameStateAdder = this.gameStateAdder.bind(this)
+      this.sendMove = this.sendMove.bind(this)
       this.state = {
-        history: []
+        receivedMove : false
       }
+      socket.on('receivedMove', (obj) => {
+        this.setState({
+          receivedMove: obj.boardArray
+        })
+      })
+    }
+    
+    sendMove(obj){
+      socket.emit('move', { boardArray : obj } )
     }
 
-    gameStateAdder(state){
-      this.state.history.push(state)
-    }
-
-    render() {
-      var history = [null,
-        null,
-        null,
-        "X",
-        "O",
-        "X",
-        "O",
-        "X",
-        null]
+    render(){
+        console.log(this.state.receivedMove)
         return (
           <div className="game">
             <div className="game-board">
-              <Board adder={this.gameStateAdder} />
+              <Board sendMove={this.sendMove} receivedMove={this.state.receivedMove} />
             </div>
           </div>
         )

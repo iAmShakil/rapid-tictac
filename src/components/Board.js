@@ -3,6 +3,7 @@ import Square from './Square'
 import {calculateWinner} from './utils'
 
 class Board extends Component {
+
     constructor(props){
         super(props)
         this.handleClick = this.handleClick.bind(this)
@@ -12,7 +13,17 @@ class Board extends Component {
           xIsNext: true
         }
       }
-      
+
+      componentWillReceiveProps(nextProps){
+        if(nextProps.receivedMove){
+          console.log('boards props received', this.props.receivedMove)
+          this.setState({
+            squares: nextProps.receivedMove
+          })
+        } else {
+          console.log(`receivedMove didn't receive`)
+        }
+      }
       handleClick(i){
         // preventing from doing anything if the block is not empty
         // and there's already a winner
@@ -20,12 +31,14 @@ class Board extends Component {
         // creating a copy of the current state, mutating the current state and rerendering the UI
         const squares = this.state.squares.slice()
         this.state.xIsNext? squares[i] = 'X': squares[i] = 'O'
+        // broadcasting the changes
+        this.props.sendMove(squares)
+
+        // rendering the changes
         this.setState(
           { squares: squares,
             xIsNext: !this.state.xIsNext }
           )
-        // creating a copy of the current state and adding it to the history of the Game component 
-        this.props.adder(this.state.squares.slice())
       }
       renderSquare(i) {
         return <Square value={this.state.squares[i]} onClick={ () => this.handleClick(i) } />;
