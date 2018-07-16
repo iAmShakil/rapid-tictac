@@ -9,11 +9,25 @@ class Game extends Component {
       super(props)
       this.sendMove = this.sendMove.bind(this)
       this.state = {
-        receivedMove : false
+        receivedMove : false,
+        initPermission: false,
+        message: ''
       }
       socket.on('receivedMove', (obj) => {
         this.setState({
           receivedMove: obj.boardArray
+        })
+      })
+
+      socket.on('serverMessage', (obj) => {
+        this.setState({
+          message: obj.message
+        })
+      })
+
+      socket.on('initPermission', (obj) => {
+        this.setState({
+          initPermission: true
         })
       })
     }
@@ -27,7 +41,10 @@ class Game extends Component {
         return (
           <div className="game">
             <div className="game-board">
-              <Board sendMove={this.sendMove} receivedMove={this.state.receivedMove} />
+              <Board sendMove={this.sendMove} 
+              receivedMove={this.state.receivedMove} 
+              initPermission={this.state.initPermission}
+              message={this.state.message} />
             </div>
           </div>
         )

@@ -10,15 +10,31 @@ class Board extends Component {
         this.status = ''
         this.state = {
           squares: Array(9).fill(null),
-          xIsNext: true
+          xIsNext: true,
+          isMyMove: false,
+          message: ''
         }
       }
 
       componentWillReceiveProps(nextProps){
+
+        if(nextProps.message){
+          this.setState({
+            message: nextProps.message
+          })
+        }
+        if(nextProps.initPermission){
+          this.setState({
+            isMyMove: true
+          })
+        }
+
         if(nextProps.receivedMove){
           console.log('boards props received', this.props.receivedMove)
           this.setState({
-            squares: nextProps.receivedMove
+            squares: nextProps.receivedMove,
+            xIsNext: !this.state.xIsNext, // switching who's next
+            isMyMove: true // allowing to click upon receiving a move
           })
         } else {
           console.log(`receivedMove didn't receive`)
@@ -27,9 +43,12 @@ class Board extends Component {
       handleClick(i){
         // preventing from doing anything if the block is not empty
         // and there's already a winner
-        if (this.state.squares[i] !== null || calculateWinner(this.state.squares)) return
+        if (this.state.squares[i] !== null || calculateWinner(this.state.squares) || !this.state.isMyMove ) return
         // creating a copy of the current state, mutating the current state and rerendering the UI
         const squares = this.state.squares.slice()
+
+        // if it's X's turn we place X in the array's position and if
+        // it's O's turn, we do the same.
         this.state.xIsNext? squares[i] = 'X': squares[i] = 'O'
         // broadcasting the changes
         this.props.sendMove(squares)
@@ -37,7 +56,8 @@ class Board extends Component {
         // rendering the changes
         this.setState(
           { squares: squares,
-            xIsNext: !this.state.xIsNext }
+            xIsNext: !this.state.xIsNext,
+            isMyMove: false}
           )
       }
       renderSquare(i) {
@@ -56,6 +76,7 @@ class Board extends Component {
         return (
           <div>
             <div className="status">{this.status}</div>
+            <div className="message"> {this.state.message} </div>
             <div className="board-row">
               {this.renderSquare(0)}
               {this.renderSquare(1)}
