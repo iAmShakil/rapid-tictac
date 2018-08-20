@@ -75,6 +75,7 @@ class Board extends Component {
     
         return (
           <div>
+            <div>{this.state.isMyMove && 'your turn' }</div>
             <div className="status">{this.status}</div>
             <div className="message"> {this.state.message} </div>
             <div className="board-row">
