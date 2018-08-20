@@ -13,7 +13,7 @@ class Board extends Component {
           xIsNext: true,
           isMyMove: false,
           message: this.props.message,
-          myIcon: this.props.myIcon,
+          myIcon: this.props.myIcon || 'O',
         }
       }
 
