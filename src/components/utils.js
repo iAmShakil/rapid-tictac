@@ -28,5 +28,9 @@ function isDraw(squares){
   }
   return true
 }
-
-export {calculateWinner, isDraw}
+function getCurrentTime(){
+  var date = new Date()
+  var time = date.getTime()
+  return time
+}
+export {calculateWinner, isDraw, getCurrentTime}

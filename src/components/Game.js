@@ -9,6 +9,7 @@ class Game extends Component {
       super(props)
       this.sendMove = this.sendMove.bind(this)
       this.joinRoom = this.joinRoom.bind(this)
+      this.timeSender = this.timeSender.bind(this)
       this.state = {
         receivedMove : false,
         initPermission: false,
@@ -44,6 +45,10 @@ class Game extends Component {
       var roomName = document.getElementById('roomid').value
       socket.emit('roomName', { name: roomName } )
     }
+    
+    timeSender(timeObj){
+      socket.emit('time', timeObj )
+    }
 
     render(){
         return (
@@ -57,11 +62,13 @@ class Game extends Component {
         { this.state.gameActive && 
           <div className="game-board">
               <p>In this case of a draw, the faster side will be declared the winner. Hurry up!</p>
-              <Board sendMove={this.sendMove} 
+              <Board sendMove={this.sendMove}
+              timeSender={this.timeSender} 
               receivedMove={this.state.receivedMove} 
               initPermission={this.state.initPermission}
               message={this.state.message}
-              myIcon={this.state.myIcon} />
+              myIcon={this.state.myIcon}
+               />
             </div> }
           </div>
         )

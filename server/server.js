@@ -14,8 +14,6 @@ app.get('/', function(req, res) {
 
 io.on('connection', function(socket){
     var roomName
-    var playerOneTime = []
-    var playerTwoTime = []
     socket.on('roomName', (obj) => {
         roomName = obj.name
         socket.join(roomName)
@@ -29,7 +27,7 @@ io.on('connection', function(socket){
             })
             socket.broadcast.to(connectedClients[0]).
             emit( 'initPermission', { yourMove: true, yourIcon: 'X' } )
-            
+
             socket.broadcast.to(connectedClients[1]).
             emit( 'initPermission', { yourMove: false, yourIcon: 'O' } )
         } else {
@@ -45,5 +43,8 @@ io.on('connection', function(socket){
 
     socket.on('move', (obj) => {
         socket.broadcast.emit('receivedMove', {boardArray : obj.boardArray})
+    })
+    socket.on('time', (obj) => {
+        console.log(obj)
     })
 })

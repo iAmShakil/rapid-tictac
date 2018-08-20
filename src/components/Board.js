@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Square from './Square'
-import {calculateWinner, isDraw} from './utils'
+import {calculateWinner, isDraw, getCurrentTime} from './utils'
 
 class Board extends Component {
 
@@ -8,12 +8,27 @@ class Board extends Component {
         super(props)
         this.handleClick = this.handleClick.bind(this)
         this.status = ''
+        this.totalTime = []
         this.state = {
           squares: Array(9).fill(null),
           xIsNext: true,
           isMyMove: false,
           message: this.props.message,
           myIcon: this.props.myIcon || 'O',
+        }
+      }
+
+      componentDidMount(){
+        if(this.state.isMyMove){
+          this.totalTime.push(getCurrentTime())
+          console.log("constructor logged", this.totalTime);
+        }
+      }
+
+      componentDidUpdate(){
+        if(this.state.isMyMove){
+          this.totalTime.push(getCurrentTime())
+          console.log("constructor logged", this.totalTime);
         }
       }
 
@@ -70,6 +85,10 @@ class Board extends Component {
         // it's O's turn, we do the same.
         this.state.xIsNext? squares[i] = 'X': squares[i] = 'O'
         // broadcasting the changes
+        if(this.state.isMyMove){
+          this.totalTime.push(getCurrentTime())
+        }
+        console.log("time journal", this.totalTime)
         this.props.sendMove(squares)
 
         // rendering the changes
@@ -96,6 +115,9 @@ class Board extends Component {
           
           if(isDraw(this.state.squares)) {
             this.status = 'Game drawn. yawn'
+            this.props.timeSender({
+              time: this.totalTime
+            })
           } else {
             const nextPlayer = this.state.xIsNext? 'X' : 'O'
             this.status = `Next move: ${nextPlayer}`
