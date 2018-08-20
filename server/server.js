@@ -26,6 +26,8 @@ io.on('connection', function(socket){
             })
             socket.broadcast.to(connectedClients[0]).
             emit( 'initPermission', { yourMove: true, yourIcon: 'X' } )
+            socket.broadcast.to(connectedClients[0]).
+            emit( 'initPermission', { yourMove: true, yourIcon: 'X' } )
         } else {
             console.log("not enoug clients block")
             io.to(roomName).emit('serverMessage', { 

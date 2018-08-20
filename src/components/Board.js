@@ -16,6 +16,14 @@ class Board extends Component {
         }
       }
 
+      componentDidMount(){
+        if(this.props.message){
+          this.setState({
+            message: this.props.message
+          })
+        }
+      }
+
       componentWillReceiveProps(nextProps){
 
         if(nextProps.message){
