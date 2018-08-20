@@ -12,20 +12,31 @@ app.get('/', function(req, res) {
 })
 
 io.on('connection', function(socket){
-    // returns an array of connected clients
-    let connectedClients = Object.keys(io.engine.clients)
-    // if there's more than 1 player, first player gets to move
-    if ( connectedClients.length > 1 ) {
-        io.emit('serverMessage', { 
-            message: 'Game started!'
-        })
-        socket.broadcast.to(connectedClients[0]).
-        emit( 'initPermission', { yourMove: true } )
-    } else {
-        socket.emit('serverMessage', { 
-            message: 'Not enough players. Please wait or play against the computer'
-        })
-    }
+    var roomName
+    socket.on('roomName', (obj) => {
+        roomName = obj.name
+        socket.join(roomName)
+        var connectedClients = Object.keys(io.sockets.adapter.rooms[roomName].sockets)
+        console.log("**connectedclients", connectedClients)
+        if ( connectedClients.length > 1 ) {
+            console.log("enough player")
+            io.in(roomName).emit('serverMessage', { 
+                message: 'Game started!',
+                gameActive: true
+            })
+            socket.broadcast.to(connectedClients[0]).
+            emit( 'initPermission', { yourMove: true, yourIcon: 'X' } )
+        } else {
+            console.log("not enoug clients block")
+            io.to(roomName).emit('serverMessage', { 
+                message: 'Invite your friend to visit this URL and enter the arena name.',
+                gameActive: false
+            })
+        }
+    } )
+
+    console.log("no room name")
+
     socket.on('move', (obj) => {
         socket.broadcast.emit('receivedMove', {boardArray : obj.boardArray})
     })

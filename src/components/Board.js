@@ -70,12 +70,12 @@ class Board extends Component {
           this.status = `the winner is ${winner}`
         } else {
           const nextPlayer = this.state.xIsNext? 'X' : 'O'
-          this.status = `the next is ${nextPlayer}`
+          this.status = `Next move: ${nextPlayer}`
         }
     
         return (
           <div>
-            <div>{this.state.isMyMove && 'your turn' }</div>
+            <div>{this.state.isMyMove ? 'Your turn!' : 'waiting for turn...' }</div>
             <div className="status">{this.status}</div>
             <div className="message"> {this.state.message} </div>
             <div className="board-row">

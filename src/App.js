@@ -8,7 +8,6 @@ class App extends Component {
   render() {
     return (
       <div>
-        <p>If there's no winner, the faster one is declared winner. So hurry up!</p>
         <Game />
       </div>
     )

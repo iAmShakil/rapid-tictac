@@ -34,8 +34,21 @@
   .game {
     display: flex;
     flex-direction: row;
+    max-width: 600px;
+    margin: 0 auto;
   }
   
   .game-info {
     margin-left: 20px;
   }
+
+  button.submit-button {
+    background: yellow;
+    padding: 10px;
+    color: black;
+    border: 1px solid #cece00;
+}
+
+button, .square {
+  cursor: pointer;
+}

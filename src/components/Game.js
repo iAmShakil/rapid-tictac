@@ -8,6 +8,7 @@ class Game extends Component {
     constructor(props){
       super(props)
       this.sendMove = this.sendMove.bind(this)
+      this.joinRoom = this.joinRoom.bind(this)
       this.state = {
         receivedMove : false,
         initPermission: false,
@@ -21,7 +22,7 @@ class Game extends Component {
 
       socket.on('serverMessage', (obj) => {
         this.setState({
-          message: obj.message
+          ...obj
         })
       })
 
@@ -36,16 +37,29 @@ class Game extends Component {
       socket.emit('move', { boardArray : obj } )
     }
 
+    joinRoom(e){
+      e.preventDefault()
+      var roomName = document.getElementById('roomid').value
+      socket.emit('roomName', { name: roomName } )
+    }
+
     render(){
-        console.log(this.state.receivedMove)
         return (
           <div className="game">
-            <div className="game-board">
+        { !this.state.gameActive &&  <form action="#" onSubmit={this.joinRoom}>
+              <div>Create an arena and invite your friend to join. Or join an already created arena.</div>
+              <input type="text" name="roomid" id="roomid"/>
+              <button className="submit-button" type="submit">Create/Join Arena</button>
+              <div>{this.state.message}</div>
+            </form> }
+        { this.state.gameActive && 
+          <div className="game-board">
+              <p>In this case of a draw, the faster side will be declared the winner. Hurry up!</p>
               <Board sendMove={this.sendMove} 
               receivedMove={this.state.receivedMove} 
               initPermission={this.state.initPermission}
               message={this.state.message} />
-            </div>
+            </div> }
           </div>
         )
       }
