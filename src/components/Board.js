@@ -12,17 +12,23 @@ class Board extends Component {
           squares: Array(9).fill(null),
           xIsNext: true,
           isMyMove: false,
-          message: ''
+          message: this.props.message,
+          myIcon: this.props.myIcon,
         }
       }
 
-      componentDidMount(){
-        if(this.props.message){
-          this.setState({
-            message: this.props.message
-          })
-        }
-      }
+      // componentDidMount(){
+      //   if(this.props.message){
+      //     this.setState({
+      //       message: this.props.message
+      //     })
+      //   }
+      //   if(this.props.myIcon){
+      //     this.setState({
+      //       myIcon: this.props.myIcon
+      //     })
+      //   }
+      // }
 
       componentWillReceiveProps(nextProps){
 
@@ -34,6 +40,11 @@ class Board extends Component {
         if(nextProps.initPermission){
           this.setState({
             isMyMove: true
+          })
+        }
+        if(nextProps.myIcon){
+          this.setState({
+            myIcon: nextProps.myIcon
           })
         }
 
@@ -85,6 +96,7 @@ class Board extends Component {
           <div>
             <div>{this.state.isMyMove ? 'Your turn!' : 'waiting for turn...' }</div>
             <div className="status">{this.status}</div>
+            <div>{`your icon is ${this.state.myIcon}`}</div>
             <div className="message"> {this.state.message} </div>
             <div className="board-row">
               {this.renderSquare(0)}

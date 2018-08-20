@@ -12,7 +12,8 @@ class Game extends Component {
       this.state = {
         receivedMove : false,
         initPermission: false,
-        message: ''
+        message: '',
+        myIcon: '',
       }
       socket.on('receivedMove', (obj) => {
         this.setState({
@@ -28,7 +29,8 @@ class Game extends Component {
 
       socket.on('initPermission', (obj) => {
         this.setState({
-          initPermission: true
+          initPermission: true,
+          myIcon : obj.yourIcon
         })
       })
     }
@@ -58,7 +60,8 @@ class Game extends Component {
               <Board sendMove={this.sendMove} 
               receivedMove={this.state.receivedMove} 
               initPermission={this.state.initPermission}
-              message={this.state.message} />
+              message={this.state.message}
+              myIcon={this.state.myIcon} />
             </div> }
           </div>
         )
