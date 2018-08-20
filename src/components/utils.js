@@ -18,4 +18,15 @@ function calculateWinner(squares) {
     }
     return null;
   }
-export {calculateWinner}
+
+function isDraw(squares){
+  for (let i = 0; i < squares.length; i++) {
+    var element = squares[i]
+    if(!element){
+      return false;
+    }
+  }
+  return true
+}
+
+export {calculateWinner, isDraw}
