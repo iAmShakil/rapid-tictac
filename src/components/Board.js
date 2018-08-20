@@ -87,6 +87,11 @@ class Board extends Component {
         const winner = calculateWinner(this.state.squares)
         if(winner){
           this.status = `the winner is ${winner}`
+          if(winner === this.state.myIcon){
+            this.status = 'You won!'
+          } else {
+            this.status = 'You lost'
+          }
         } else {
           const nextPlayer = this.state.xIsNext? 'X' : 'O'
           this.status = `Next move: ${nextPlayer}`
@@ -96,7 +101,7 @@ class Board extends Component {
           <div>
             <div>{this.state.isMyMove ? 'Your turn!' : 'waiting for turn...' }</div>
             <div className="status">{this.status}</div>
-            <div>{`your icon is ${this.state.myIcon}`}</div>
+            {/* <div>{`your icon is ${this.state.myIcon}`}</div> */}
             <div className="message"> {this.state.message} </div>
             <div className="board-row">
               {this.renderSquare(0)}
