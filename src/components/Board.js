@@ -74,6 +74,7 @@ class Board extends Component {
           console.log(`receivedMove didn't receive`)
         }
       }
+
       handleClick(i){
         // preventing from doing anything if the block is not empty
         // and there's already a winner

@@ -15,6 +15,7 @@ class Game extends Component {
         initPermission: false,
         message: '',
         myIcon: '',
+        drawResult: '',
       }
       socket.on('receivedMove', (obj) => {
         this.setState({
@@ -36,8 +37,14 @@ class Game extends Component {
       })
 
       socket.on('drawResult', (obj) => {
-        console.log("draw result", obj);
+        console.log("result check", obj.result, this.state.myIcon);
+        if(obj.result === this.state.myIcon){
+          console.log("you won");
+        } else {
+          console.log("you lost");
+        }
       })
+      
     }
     
     sendMove(obj){
@@ -47,7 +54,11 @@ class Game extends Component {
     joinRoom(e){
       e.preventDefault()
       var roomName = document.getElementById('roomid').value
-      socket.emit('roomName', { name: roomName } )
+      if(roomName){
+        socket.emit('roomName', { name: roomName } )
+      } else {
+        alert("Please enter a valid input")
+      }
     }
     
     timeSender(timeObj){

@@ -57,18 +57,13 @@ io.on('connection', function(socket){
             console.log("total time", firstPlayerTime, secondPlayerTime)
             console.log("connected clients", connectedClients);
             if( timeCounter(firstPlayerTime) < timeCounter(secondPlayerTime)){
-                socket.broadcast.to(connectedClients[0]).
-                emit( 'drawResult', { result: 'You won for taking less time' } )
-
-                socket.broadcast.to(connectedClients[1]).
-                emit( 'drawResult', { result: 'You lost for taking more time.' } )
+                io.in(roomName).emit('drawResult', {
+                    result: 'X'
+                })                
             } else {
-
-                socket.broadcast.to(connectedClients[0]).
-                emit( 'drawResult', { result: 'You lost for taking more time.' } )
-
-                socket.broadcast.to(connectedClients[1]).
-                emit( 'drawResult', { result: 'You won for taking less time' } )
+                io.in(roomName).emit('drawResult', {
+                    result: 'O'
+                })
             }
         }
     })
