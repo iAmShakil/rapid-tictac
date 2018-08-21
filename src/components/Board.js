@@ -108,10 +108,15 @@ class Board extends Component {
         if(winner){
           this.status = `the winner is ${winner}`
           if(winner === this.state.myIcon){
-            this.status = 'You won!'
+            this.status = 'You won! Game restarting in 3 seconds!'
           } else {
-            this.status = 'You lost'
+            this.status = 'You lost. Game restarting in 3 seconds!'
           }
+          setTimeout(() => {
+            this.setState({
+              squares: Array(9).fill(null)
+            })
+          }, 3000);
         } else {
           
           if(isDraw(this.state.squares)) {
