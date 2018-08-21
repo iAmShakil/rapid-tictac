@@ -38,10 +38,12 @@ class Game extends Component {
 
       socket.on('drawResult', (obj) => {
         console.log("result check", obj.result, this.state.myIcon);
-        if(obj.result === this.state.myIcon){
-          console.log("you won");
+        if(obj.result === this.state.myIcon || this.state.myIcon === '' && obj.result === 'O' ){
+          alert("You won by time");
+        } else if (obj.result) {
+          alert("You lost by time");
         } else {
-          console.log("you lost");
+          console.log('something went wrong');
         }
       })
       
