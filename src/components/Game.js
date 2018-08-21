@@ -34,6 +34,10 @@ class Game extends Component {
           myIcon : obj.yourIcon
         })
       })
+
+      socket.on('drawResult', (obj) => {
+        console.log("draw result", obj);
+      })
     }
     
     sendMove(obj){

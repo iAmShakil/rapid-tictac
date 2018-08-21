@@ -1,7 +1,7 @@
 var app = require('express')()
 var server = require('http').Server(app)
 var io = require('socket.io')(server)
-var { getCurrentTime } = require('./utils')
+var { timeCounter } = require('./utils')
 
 const PORT = 3001
 
@@ -12,12 +12,15 @@ app.get('/', function(req, res) {
     res.sendFile(__dirname + '/index.html')
 })
 
+var firstPlayerTime
+var secondPlayerTime
+var connectedclients
 io.on('connection', function(socket){
     var roomName
     socket.on('roomName', (obj) => {
         roomName = obj.name
         socket.join(roomName)
-        var connectedClients = Object.keys(io.sockets.adapter.rooms[roomName].sockets)
+        connectedClients = Object.keys(io.sockets.adapter.rooms[roomName].sockets)
         console.log("**connectedclients", connectedClients)
         if ( connectedClients.length > 1 ) {
             console.log("enough player")
@@ -45,6 +48,28 @@ io.on('connection', function(socket){
         socket.broadcast.emit('receivedMove', {boardArray : obj.boardArray})
     })
     socket.on('time', (obj) => {
-        console.log(obj)
+        if( obj.time.length === 10 ){
+            firstPlayerTime = obj.time.slice(0,8)
+        } else if (obj.time.length === 8 ){
+            secondPlayerTime = obj.time
+        }
+        if(firstPlayerTime && secondPlayerTime){
+            console.log("total time", firstPlayerTime, secondPlayerTime)
+            console.log("connected clients", connectedClients);
+            if( timeCounter(firstPlayerTime) < timeCounter(secondPlayerTime)){
+                socket.broadcast.to(connectedClients[0]).
+                emit( 'drawResult', { result: 'You won for taking less time' } )
+
+                socket.broadcast.to(connectedClients[1]).
+                emit( 'drawResult', { result: 'You lost for taking more time.' } )
+            } else {
+
+                socket.broadcast.to(connectedClients[0]).
+                emit( 'drawResult', { result: 'You lost for taking more time.' } )
+
+                socket.broadcast.to(connectedClients[1]).
+                emit( 'drawResult', { result: 'You won for taking less time' } )
+            }
+        }
     })
 })
