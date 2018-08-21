@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Board from './Board'
 import socketIOClient from 'socket.io-client'
+import { setTimeout } from 'timers';
 var socket = socketIOClient('localhost:3001')
 
 class Game extends Component {
@@ -39,9 +40,17 @@ class Game extends Component {
       socket.on('drawResult', (obj) => {
         console.log("result check", obj.result, this.state.myIcon);
         if(obj.result === this.state.myIcon || this.state.myIcon === '' && obj.result === 'O' ){
+          window.totalWon++
           alert("You won by time");
+          this.setState({
+            receivedMove: Array(9).fill(null)
+          })
         } else if (obj.result) {
+          window.totalLost++
           alert("You lost by time");
+          this.setState({
+              receivedMove: Array(9).fill(null)
+          })
         } else {
           console.log('something went wrong');
         }

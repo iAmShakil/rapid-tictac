@@ -16,6 +16,8 @@ class Board extends Component {
           message: this.props.message,
           myIcon: this.props.myIcon || 'O',
         }
+        window.totalWon = 0;
+        window.totalLost = 0;
       }
 
       componentDidMount(){
@@ -89,7 +91,6 @@ class Board extends Component {
         if(this.state.isMyMove){
           this.totalTime.push(getCurrentTime())
         }
-        console.log("time journal", this.totalTime)
         this.props.sendMove(squares)
 
         // rendering the changes
@@ -108,9 +109,11 @@ class Board extends Component {
         if(winner){
           this.status = `the winner is ${winner}`
           if(winner === this.state.myIcon){
-            this.status = 'You won! Game restarting in 3 seconds!'
+            window.totalWon++
+            this.status = 'You won! Restarting in 3 seconds!'
           } else {
-            this.status = 'You lost. Game restarting in 3 seconds!'
+            window.totalLost++
+            this.status = 'You lost. Restarting in 3 seconds!'
           }
           setTimeout(() => {
             this.setState({
@@ -132,7 +135,7 @@ class Board extends Component {
     
         return (
           <div>
-            <div>{this.state.isMyMove ? 'Your turn!' : 'waiting for turn...' }</div>
+            <div>{this.state.isMyMove ? 'Your turn!' : 'Waiting for your turn...' }</div>
             <div className="status">{this.status}</div>
             {/* <div>{`your icon is ${this.state.myIcon}`}</div> */}
             <div className="message"> {this.state.message} </div>
@@ -150,6 +153,10 @@ class Board extends Component {
               {this.renderSquare(6)}
               {this.renderSquare(7)}
               {this.renderSquare(8)}
+            </div>
+            <div>
+              Total won: {window.totalWon} <br/>
+              Total lost: {window.totalLost} 
             </div>
           </div>
         )
