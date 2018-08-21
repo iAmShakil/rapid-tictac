@@ -3,7 +3,7 @@ var server = require('http').Server(app)
 var io = require('socket.io')(server)
 var { timeCounter } = require('./utils')
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 
 server.listen(PORT, function(){
     console.log('the server is listening on ' + PORT)
